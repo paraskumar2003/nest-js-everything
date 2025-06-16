@@ -4,7 +4,7 @@ import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
 import { User } from './entities/user.entity';
 import { PaymentsModule } from '../payments/payments.module';
-import { IdempotencyModule } from 'src/idempotency/idempotency.module';
+import { IdempotencyModule } from 'src/idempotency/key-guard/idempotency.module';
 
 @Module({
     imports: [

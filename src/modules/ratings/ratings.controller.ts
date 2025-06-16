@@ -16,7 +16,7 @@ import { RatingsService } from './ratings.service';
 import { CreateRatingDto } from './dto/create-rating.dto';
 import { UpdateRatingDto } from './dto/update-rating.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { IdempotencyGuard } from 'src/idempotency/idempotency.guard';
+import { IdempotencyGuard } from 'src/idempotency/key-guard/idempotency.guard';
 import { CustomLoggerService } from 'src/logger/logger.service';
 import { v4 as uuidv4 } from 'uuid';
 

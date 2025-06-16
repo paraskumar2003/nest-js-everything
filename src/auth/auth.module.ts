@@ -8,6 +8,7 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { UsersModule } from 'src/modules/users/users.module';
 import { SmsModule } from 'src/modules/sms/sms.module';
+import { IdempotencyModule } from 'src/idempotency';
 
 @Module({
     imports: [
@@ -15,6 +16,7 @@ import { SmsModule } from 'src/modules/sms/sms.module';
         UsersModule,
         SmsModule,
         PassportModule,
+        IdempotencyModule,
         JwtModule.registerAsync({
             imports: [ConfigModule],
             inject: [ConfigService],

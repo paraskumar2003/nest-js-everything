@@ -3,20 +3,15 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { IdempotencyService } from './idempotency.service';
 import { IdempotencyGuard } from './idempotency.guard';
 import Redis from 'ioredis';
+import { RedisModule } from 'src/redis/redis.module';
 
 @Module({
-    imports: [ConfigModule],
+    imports: [ConfigModule, RedisModule],
     providers: [
         {
             provide: 'REDIS_CLIENT',
             useFactory: (configService: ConfigService) => {
-                const env = configService.get('NODE_ENV');
-                const redisUrl =
-                    env === 'production'
-                        ? configService.get('REDIS_URL_PROD')
-                        : configService.get('REDIS_URL_DEV');
-
-                return new Redis(redisUrl);
+                return new Redis(configService.get('REDIS_URL'));
             },
             inject: [ConfigService],
         },

@@ -13,13 +13,13 @@ import {
     BadRequestException,
     UseGuards,
 } from '@nestjs/common';
-import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { UpdateUpiDto } from './dto/update-upi.dto';
-import { CustomLoggerService } from 'src/logger/logger.service';
-import { PaymentsService } from '../payments/payments.service';
-import { IdempotencyGuard } from 'src/idempotency/key-guard/idempotency.guard';
+import { UsersService } from 'src/modules/users/users.service';
+import { CreateUserDto } from 'src/modules/users/dto/create-user.dto';
+import { UpdateUserDto } from 'src/modules/users/dto/update-user.dto';
+import { UpdateUpiDto } from 'src/modules/users/dto/update-upi.dto';
+import { CustomLoggerService } from '../logger/logger.service';
+import { PaymentsService } from 'src/modules/payments/payments.service';
+import { IdempotencyGuard } from '../idempotency/key-guard/idempotency.guard';
 import { v4 as uuidv4 } from 'uuid';
 
 @Controller('users')

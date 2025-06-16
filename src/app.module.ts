@@ -4,7 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { LoggerModule } from './logger/logger.module';
 import { UtilsModule } from './utils/utils.module';
-import { IdempotencyModule } from './idempotency/idempotency.module';
+import { IdempotencyModule } from './idempotency/key-guard/idempotency.module';
 import {
     RatingsModule,
     UsersModule,
@@ -13,6 +13,7 @@ import {
     PaymentsModule,
     SmsModule,
 } from './modules';
+import { RedisModule } from './redis/redis.module';
 
 @Module({
     imports: [
@@ -63,6 +64,7 @@ import {
         UtilsModule,
         IdempotencyModule,
         RatingsModule,
+        RedisModule,
     ],
 })
 export class AppModule {}

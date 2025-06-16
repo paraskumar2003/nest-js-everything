@@ -11,7 +11,7 @@ import { CouponsService } from './coupons.service';
 import { RedeemCouponDto } from './dto/redeem-coupon.dto';
 import { RateCouponDto } from './dto/rate-coupon.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { IdempotencyGuard } from 'src/idempotency/idempotency.guard';
+import { IdempotencyGuard } from 'src/idempotency/key-guard/idempotency.guard';
 import { CustomLoggerService } from 'src/logger/logger.service';
 import { v4 as uuidv4 } from 'uuid';
 

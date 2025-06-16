@@ -5,7 +5,7 @@ import { CouponsController } from './coupons.controller';
 import { Coupon } from './entities/coupon.entity';
 import { User } from '../users/entities/user.entity';
 import { PaymentsModule } from '../payments/payments.module';
-import { IdempotencyModule } from 'src/idempotency/idempotency.module';
+import { IdempotencyModule } from 'src/idempotency/key-guard/idempotency.module';
 import { RatingsModule } from '../ratings/ratings.module';
 
 @Module({
