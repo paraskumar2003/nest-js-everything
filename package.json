@@ -16,7 +16,11 @@
         "test:cov": "jest --coverage",
         "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
         "test:e2e": "jest --config ./test/jest-e2e.json",
-        "generate:dbml": "db2dbml mysql 'mysql://gpi_fsp_app_user:OPSZToZbtvBcGCPx@virtex-production-db.cg6cziyuwhho.ap-south-1.rds.amazonaws.com/gpi_fsp_crdb_prod' -o database.dbml"
+        "generate:dbml": "db2dbml mysql 'mysql://gpi_fsp_app_user:OPSZToZbtvBcGCPx@virtex-production-db.cg6cziyuwhho.ap-south-1.rds.amazonaws.com/gpi_fsp_crdb_prod' -o database.dbml",
+        "migration:generate": "typeorm-ts-node-commonjs migration:generate -d src/config/typeorm.config.ts",
+        "migration:run": "typeorm-ts-node-commonjs migration:run -d src/config/typeorm.config.ts",
+        "migration:revert": "typeorm-ts-node-commonjs migration:revert -d src/config/typeorm.config.ts",
+        "migration:create": "typeorm-ts-node-commonjs migration:create"
     },
     "dependencies": {
         "@nestjs/common": "^10.0.0",
