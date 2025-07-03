@@ -1,22 +1,21 @@
 import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
-import { OtpsModule } from '../modules/otps/otps.module';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { UsersModule } from 'src/modules/users/users.module';
-import { SmsModule } from 'src/modules/sms/sms.module';
 import { IdempotencyModule } from 'src/idempotency';
+import { DistrictsService } from 'src/modules/districts/districts.service';
+import { DistrictsModule } from 'src/modules';
 
 @Module({
     imports: [
-        OtpsModule,
         UsersModule,
-        SmsModule,
         PassportModule,
         IdempotencyModule,
+        DistrictsModule,
         JwtModule.registerAsync({
             imports: [ConfigModule],
             inject: [ConfigService],
@@ -27,7 +26,7 @@ import { IdempotencyModule } from 'src/idempotency';
         }),
     ],
     controllers: [AuthController],
-    providers: [AuthService, JwtStrategy],
+    providers: [AuthService, JwtStrategy, DistrictsService],
     exports: [AuthService, JwtModule],
 })
 export class AuthModule {}

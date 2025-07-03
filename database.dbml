@@ -1,0 +1,70 @@
+Enum "otps_status_enum" {
+  "pending"
+  "verified"
+  "expired"
+}
+
+Enum "users_role_enum" {
+  "HSW"
+  "DC"
+  "Trainer"
+  "Admin"
+  "Reckitt"
+}
+
+Table "districts" {
+  "id" int [pk, not null, increment]
+  "created_at" datetime(6) [not null, default: `CURRENT_TIMESTAMP(6)`]
+  "updated_at" "datetime(6) on update CURRENT_TIMESTAMP" [not null, default: `CURRENT_TIMESTAMP(6)`]
+  "deleted_at" datetime(6)
+  "name" varchar(255) [not null, note: 'Name of the district']
+}
+
+Table "migrations" {
+  "id" int [pk, not null, increment]
+  "timestamp" bigint [not null]
+  "name" varchar(255) [not null]
+}
+
+Table "otps" {
+  "id" int [pk, not null, increment]
+  "created_at" datetime(6) [not null, default: `CURRENT_TIMESTAMP(6)`]
+  "updated_at" "datetime(6) on update CURRENT_TIMESTAMP" [not null, default: `CURRENT_TIMESTAMP(6)`]
+  "deleted_at" datetime(6)
+  "status" otps_status_enum [not null, note: 'Status of the otp']
+  "mobile" varchar(15) [unique, not null, note: 'Mobile phone number of the user']
+  "active" tinyint [not null, default: 1, note: 'Whether the user account is active or not']
+  "otp" varchar(6) [not null, note: 'Otp code']
+
+  Indexes {
+    mobile [type: btree, name: "idx_user_mobile"]
+  }
+}
+
+Table "query-result-cache" {
+  "id" int [pk, not null, increment]
+  "identifier" varchar(255)
+  "time" bigint [not null]
+  "duration" int [not null]
+  "query" text [not null]
+  "result" text [not null]
+}
+
+Table "users" {
+  "id" int [pk, not null, increment]
+  "created_at" datetime(6) [not null, default: `CURRENT_TIMESTAMP(6)`]
+  "updated_at" "datetime(6) on update CURRENT_TIMESTAMP" [not null, default: `CURRENT_TIMESTAMP(6)`]
+  "deleted_at" datetime(6)
+  "name" varchar(255) [not null, note: 'Full name of the user']
+  "role" users_role_enum [not null, note: 'Role of the user in the system (HSW, DC, Trainer, Admin, Reckitt)']
+  "mobile" varchar(15) [unique, not null, note: 'Mobile phone number of the user']
+  "email" varchar(255) [note: 'Email address of the user']
+  "district_id" int
+  "active" tinyint [not null, default: 1, note: 'Whether the user account is active or not']
+
+  Indexes {
+    mobile [type: btree, name: "idx_user_mobile"]
+  }
+}
+
+Ref "FK_efc03fc2a5902ef17fb8a2bdcc2":"districts"."id" < "users"."district_id"

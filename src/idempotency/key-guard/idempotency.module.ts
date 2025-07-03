@@ -11,7 +11,7 @@ import { RedisModule } from 'src/redis/redis.module';
         {
             provide: 'REDIS_CLIENT',
             useFactory: (configService: ConfigService) => {
-                return new Redis(configService.get('REDIS_URL'));
+                return new Redis(configService.get('REDIS_HOST'));
             },
             inject: [ConfigService],
         },

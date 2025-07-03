@@ -6,6 +6,8 @@ config();
 
 const configService = new ConfigService();
 
+console.log({ configService: configService.get('DB_HOST') });
+
 export default new DataSource({
     type: 'mysql',
     host: configService.get('DB_HOST', 'localhost'),

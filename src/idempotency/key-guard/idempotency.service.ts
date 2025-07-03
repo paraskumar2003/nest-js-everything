@@ -1,12 +1,10 @@
 import { Injectable, Inject } from '@nestjs/common';
-import Redis from 'ioredis';
 import { RedisService } from 'src/redis/redis.service';
 
 @Injectable()
 export class IdempotencyService {
     constructor(
         @Inject('REDIS_CLIENT')
-        private readonly redis: Redis,
         private readonly redisService: RedisService,
     ) {}
 

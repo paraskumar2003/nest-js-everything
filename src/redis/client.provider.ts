@@ -18,7 +18,10 @@ export const redisClientProvider: Provider = {
         });
 
         client.on('ready', () => {
-            console.log('Redis client connection ready');
+            console.log(
+                'Redis client connection ready',
+                configService.get('REDIS_HOST'),
+            );
         });
 
         return client; // Return the configured ioredis client instance

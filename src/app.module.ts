@@ -6,12 +6,11 @@ import { LoggerModule } from './logger/logger.module';
 import { UtilsModule } from './utils/utils.module';
 import { IdempotencyModule } from './idempotency/key-guard/idempotency.module';
 import {
-    RatingsModule,
     UsersModule,
-    OtpsModule,
-    CouponsModule,
-    PaymentsModule,
-    SmsModule,
+    DistrictsModule,
+    SchoolsModule,
+    ChecklistModule,
+    ActivityModule,
 } from './modules';
 import { RedisModule } from './redis/redis.module';
 
@@ -40,9 +39,13 @@ import { RedisModule } from './redis/redis.module';
                 port: configService.get<number>('DB_PORT', 3306),
                 username: configService.get('DB_USERNAME', 'root'),
                 password: configService.get('DB_PASSWORD', 'password'),
-                database: configService.get('DB_DATABASE', 'coupons_db'),
+                database: configService.get(
+                    'DB_DATABASE',
+                    'harpic_sanitation_db',
+                ),
                 entities: [__dirname + '/**/*.entity{.ts,.js}'],
-                synchronize: configService.get('NODE_ENV') !== 'production',
+                // synchronize: configService.get('NODE_ENV') !== 'production',
+                synchronize: false,
                 logging: configService.get('NODE_ENV') !== 'production',
                 charset: 'utf8mb4',
                 timezone: 'Z',
@@ -56,15 +59,14 @@ import { RedisModule } from './redis/redis.module';
         }),
         LoggerModule,
         UsersModule,
-        OtpsModule,
-        CouponsModule,
+        DistrictsModule,
         AuthModule,
-        SmsModule,
-        PaymentsModule,
         UtilsModule,
         IdempotencyModule,
-        RatingsModule,
         RedisModule,
+        SchoolsModule,
+        ActivityModule,
+        ChecklistModule,
     ],
 })
 export class AppModule {}
