@@ -39,12 +39,8 @@ import { RedisModule } from './redis/redis.module';
                 port: configService.get<number>('DB_PORT', 3306),
                 username: configService.get('DB_USERNAME', 'root'),
                 password: configService.get('DB_PASSWORD', 'password'),
-                database: configService.get(
-                    'DB_DATABASE',
-                    'harpic_sanitation_db',
-                ),
+                database: configService.get('DB_NAME', 'harpic_sanitation_db'),
                 entities: [__dirname + '/**/*.entity{.ts,.js}'],
-                // synchronize: configService.get('NODE_ENV') !== 'production',
                 synchronize: false,
                 logging: configService.get('NODE_ENV') !== 'production',
                 charset: 'utf8mb4',

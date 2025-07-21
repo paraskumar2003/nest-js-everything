@@ -14,7 +14,7 @@ export default new DataSource({
     port: configService.get<number>('DB_PORT', 3306),
     username: configService.get('DB_USERNAME', 'root'),
     password: configService.get('DB_PASSWORD', 'password'),
-    database: configService.get('DB_DATABASE', 'coupons_db'),
+    database: configService.get('DB_NAME', 'coupons_db'),
     entities: [__dirname + '/../**/*.entity{.ts,.js}'],
     migrations: [__dirname + '/../migrations/*{.ts,.js}'],
     synchronize: false,

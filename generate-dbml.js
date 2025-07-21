@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 import { exec } from 'child_process';
 
-const command = `db2dbml mysql 'mysql://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}/${process.env.DB_DATABASE}' -o database.dbml`;
+const command = `db2dbml mysql 'mysql://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}/${process.env.DB_NAME}' -o database.dbml`;
 
 exec(command, (error, stdout, stderr) => {
     if (error) {
