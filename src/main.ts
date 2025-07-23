@@ -28,4 +28,3 @@ async function bootstrap() {
 
 bootstrap();
 console.log('env', process.env.NODE_ENV);
-// AppClusterService.clusterize(bootstrap);
