@@ -13,6 +13,7 @@ import {
     ActivityModule,
 } from './modules';
 import { RedisModule } from './redis/redis.module';
+import { DbModule } from './db/db.module';
 
 @Module({
     imports: [
@@ -63,6 +64,7 @@ import { RedisModule } from './redis/redis.module';
         SchoolsModule,
         ActivityModule,
         ChecklistModule,
+        DbModule,
     ],
 })
 export class AppModule {}
