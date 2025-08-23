@@ -14,6 +14,7 @@ import {
 } from './modules';
 import { RedisModule } from './redis/redis.module';
 import { DbModule } from './db/db.module';
+import { S3Module } from './s3/s3.module';
 
 @Module({
     imports: [
@@ -65,6 +66,7 @@ import { DbModule } from './db/db.module';
         ActivityModule,
         ChecklistModule,
         DbModule,
+        S3Module,
     ],
 })
 export class AppModule {}
