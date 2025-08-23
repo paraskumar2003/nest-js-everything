@@ -1,6 +1,7 @@
 import { Column, Entity, Index, ManyToOne, JoinColumn } from 'typeorm';
 import { BaseEntity } from '../../../common/base.entity';
 import { District } from '../../districts/entities/district.entity';
+import { UserStatus } from '../enum/user-status.enum';
 
 export enum UserRole {
     HSW = 'HSW',
@@ -57,4 +58,7 @@ export class User extends BaseEntity {
     @ManyToOne(() => District, district => district.users)
     @JoinColumn({ name: 'district_id' })
     district: District;
+
+    @Column({ type: 'enum', enum: UserStatus, default: UserStatus.Active })
+    status: UserStatus;
 }

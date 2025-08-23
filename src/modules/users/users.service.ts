@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User, UserRole } from './entities/user.entity';
@@ -9,16 +9,19 @@ import { DistrictsService } from '../districts/districts.service';
 import { plainToInstance } from 'class-transformer';
 import { UserResponseDto } from './dto/user-response.dto';
 import { District } from '../districts/entities/district.entity';
+import { BaseService } from 'src/common/base.service';
 
 @Injectable()
-export class UsersService {
+export class UsersService extends BaseService<User> {
     constructor(
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
         @InjectRepository(Otp)
         private readonly otpRepository: Repository<Otp>,
         private readonly districtsService: DistrictsService,
-    ) {}
+    ) {
+        super(userRepository);
+    }
 
     async create(createUserDto: CreateUserDto): Promise<UserResponseDto> {
         const user = this.userRepository.create(createUserDto);
@@ -30,7 +33,7 @@ export class UsersService {
         return plainToInstance(UserResponseDto, savedUser);
     }
 
-    async findAll(
+    async findAllUsers(
         filters: {
             active?: boolean;
             role?: UserRole;
@@ -59,14 +62,6 @@ export class UsersService {
 
         const users = await queryBuilder.getMany();
         return plainToInstance(UserResponseDto, users);
-    }
-
-    async findOne(id: number): Promise<UserResponseDto | null> {
-        const user = await this.userRepository.findOne({
-            where: { id },
-            relations: ['district'],
-        });
-        return user ? plainToInstance(UserResponseDto, user) : null;
     }
 
     async findByMobile(mobile: string): Promise<UserResponseDto | null> {

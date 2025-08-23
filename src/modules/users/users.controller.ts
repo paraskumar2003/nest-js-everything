@@ -59,14 +59,9 @@ export class UsersController {
         });
 
         const result = await this.usersService.findAll({
-            active:
-                active === 'true'
-                    ? true
-                    : active === 'false'
-                      ? false
-                      : undefined,
-            role,
-            districtId: districtId ? parseInt(districtId) : undefined,
+            where: {
+                role,
+            },
         });
 
         this.logger.info('GET_USERS_RESPONSE', journeyId, {
@@ -80,7 +75,7 @@ export class UsersController {
         const journeyId = uuidv4();
         this.logger.info('GET_USER_REQUEST', journeyId, { id });
 
-        const user = await this.usersService.findOne(id);
+        const user = await this.usersService.findOneById(id);
         if (!user) {
             this.logger.error('GET_USER_NOT_FOUND', journeyId, { id });
             throw new NotFoundException(`User with ID ${id} not found`);
