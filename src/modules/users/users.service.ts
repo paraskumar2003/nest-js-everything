@@ -5,10 +5,8 @@ import { User, UserRole } from './entities/user.entity';
 import { Otp, OtpStatus } from './entities/otp.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { DistrictsService } from '../districts/districts.service';
 import { plainToInstance } from 'class-transformer';
 import { UserResponseDto } from './dto/user-response.dto';
-import { District } from '../districts/entities/district.entity';
 import { BaseService } from 'src/common/base.service';
 
 @Injectable()
@@ -18,17 +16,12 @@ export class UsersService extends BaseService<User> {
         private readonly userRepository: Repository<User>,
         @InjectRepository(Otp)
         private readonly otpRepository: Repository<Otp>,
-        private readonly districtsService: DistrictsService,
     ) {
         super(userRepository);
     }
 
     async create(createUserDto: CreateUserDto): Promise<UserResponseDto> {
         const user = this.userRepository.create(createUserDto);
-        let district = await this.districtsService.findOne(
-            createUserDto.districtId,
-        );
-        if (district) user.district = { id: district.id } as District;
         const savedUser = await this.userRepository.save(user);
         return plainToInstance(UserResponseDto, savedUser);
     }
@@ -92,13 +85,6 @@ export class UsersService extends BaseService<User> {
     async remove(id: number): Promise<boolean> {
         const result = await this.userRepository.softDelete(id);
         return result.affected > 0;
-    }
-
-    // Method to count users by district (used by districts module)
-    async countByDistrict(districtId: number): Promise<number> {
-        return this.userRepository.count({
-            where: { district: { id: districtId } },
-        });
     }
 
     // OTP related methods

@@ -5,13 +5,7 @@ import { AuthModule } from './auth/auth.module';
 import { LoggerModule } from './logger/logger.module';
 import { UtilsModule } from './utils/utils.module';
 import { IdempotencyModule } from './idempotency/key-guard/idempotency.module';
-import {
-    UsersModule,
-    DistrictsModule,
-    SchoolsModule,
-    ChecklistModule,
-    ActivityModule,
-} from './modules';
+import { UsersModule } from './modules';
 import { RedisModule } from './redis/redis.module';
 import { DbModule } from './db/db.module';
 import { S3Module } from './s3/s3.module';
@@ -58,14 +52,10 @@ import { S3Module } from './s3/s3.module';
         }),
         LoggerModule,
         UsersModule,
-        DistrictsModule,
         AuthModule,
         UtilsModule,
         IdempotencyModule,
         RedisModule,
-        SchoolsModule,
-        ActivityModule,
-        ChecklistModule,
         DbModule,
         S3Module,
     ],

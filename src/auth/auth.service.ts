@@ -8,14 +8,12 @@ import { CustomLoggerService } from 'src/logger/logger.service';
 import { v4 as uuidv4 } from 'uuid';
 import { RegisterHSWDto } from './dto/hsw/regsiter-hsw.dto';
 import { UserRole } from 'src/modules/users/entities/user.entity';
-import { DistrictsService } from 'src/modules/districts/districts.service';
 
 @Injectable()
 export class AuthService {
     constructor(
         private readonly jwtService: JwtService,
         private readonly usersService: UsersService,
-        private readonly districtService: DistrictsService,
         private readonly logger: CustomLoggerService,
     ) {
         this.logger = logger;
@@ -121,18 +119,6 @@ export class AuthService {
     }
 
     async registerHSW(registerHwsDto: RegisterHSWDto): Promise<any> {
-        const journeyId = uuidv4();
-        let district = await this.districtService.findByName(
-            registerHwsDto.district,
-        );
-
-        if (!district) {
-            this.logger.error('REGISTER_HSW_DISTRICT_NOT_FOUND', journeyId, {
-                districtId: registerHwsDto.district,
-            });
-            throw new BadRequestException('District not found.');
-        }
-
         let isUserAlreadyExists = await this.usersService.findByMobile(
             registerHwsDto.mobile.trim(),
         );
@@ -145,7 +131,6 @@ export class AuthService {
             name: registerHwsDto.name,
             mobile: registerHwsDto.mobile,
             role: UserRole.HSW,
-            districtId: district.id,
         });
         return {
             success: true,

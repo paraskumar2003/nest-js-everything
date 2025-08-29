@@ -1,6 +1,5 @@
-import { Column, Entity, Index, ManyToOne, JoinColumn } from 'typeorm';
+import { Column, Entity, Index } from 'typeorm';
 import { BaseEntity } from '../../../common/base.entity';
-import { District } from '../../districts/entities/district.entity';
 import { UserStatus } from '../enum/user-status.enum';
 
 export enum UserRole {
@@ -14,7 +13,6 @@ export enum UserRole {
 @Entity('users')
 @Index('IDX_USER_NAME', ['name'])
 @Index('IDX_USER_ROLE', ['role'])
-@Index('IDX_DISTRICT_ID', ['district'])
 @Index('IDX_USER_ACTIVE', ['active'])
 export class User extends BaseEntity {
     @Column({
@@ -54,10 +52,6 @@ export class User extends BaseEntity {
         comment: 'Whether the user account is active or not',
     })
     active: boolean;
-
-    @ManyToOne(() => District, district => district.users)
-    @JoinColumn({ name: 'district_id' })
-    district: District;
 
     @Column({ type: 'enum', enum: UserStatus, default: UserStatus.Active })
     status: UserStatus;
