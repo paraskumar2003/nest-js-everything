@@ -48,7 +48,6 @@ export class TransformInterceptor<T>
             return value.map(v => this.sanitize(v)) as any;
         }
 
-        // Skip Date, Buffer, or any other special objects
         if (value instanceof Date || Buffer.isBuffer(value)) {
             return value;
         }
