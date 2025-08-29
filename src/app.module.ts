@@ -27,8 +27,9 @@ import { S3Module } from './s3/s3.module';
                     case 'development':
                         return '.env.development';
                     case 'local':
-                    default:
                         return '.env.local';
+                    default:
+                        return '.env';
                 }
             })(),
         }),
