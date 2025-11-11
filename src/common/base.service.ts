@@ -86,10 +86,12 @@ export class BaseService<T extends BaseEntity> {
         }
 
         if (Array.isArray(where)) {
-            return where.map(w => ({ ...w, active: true }));
+            return where.map(
+                w => ({ ...w, active: true }) as unknown as FindOptionsWhere<T>,
+            );
         }
 
-        return { ...where, active: true };
+        return { ...where, active: true } as unknown as FindOptionsWhere<T>;
     }
 
     /**
@@ -99,9 +101,25 @@ export class BaseService<T extends BaseEntity> {
         return this.repository;
     }
 
-    createQueryBuilder(alias: string) {
+    createBuilder(alias: string) {
         return this.repository
             .createQueryBuilder(alias)
             .where(`${alias}.active = :active`, { active: true });
+    }
+
+    async countBy(
+        options?: Omit<FindManyOptions<T>, 'where'> & {
+            where?: FindOptionsWhere<T> | FindOptionsWhere<T>[];
+        },
+    ): Promise<number> {
+        const mergedWhere = this.mergeWithActive(options?.where);
+        return this.repository.count({ ...options, where: mergedWhere });
+    }
+
+    async softDeleteById(id: number) {
+        this.repository.update(id, {
+            active: false,
+            deletedAt: new Date(),
+        } as any);
     }
 }

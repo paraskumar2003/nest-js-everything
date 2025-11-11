@@ -35,6 +35,18 @@ export class AllExceptionsFilter implements ExceptionFilter {
         let errorStack = null;
         let data = null;
 
+        const logContext: any = {
+            requestId,
+            journeyId: request.journeyId,
+            method: request.method,
+            path,
+            body: request.body,
+            params: request.params,
+            query: request.query,
+            headers: request.headers,
+            timestamp,
+        };
+
         if (exception instanceof Error) {
             this.loggerService.error('Exception', request.journeyId, {
                 error: exception.message,
@@ -74,6 +86,17 @@ export class AllExceptionsFilter implements ExceptionFilter {
                 statusCode: exception.cachedData.statusCode,
             };
         }
+
+        // Add response details to log
+        logContext.response = responseObj;
+        logContext.statusCode = statusCode;
+
+        // Log everything
+        this.loggerService.error(
+            'DEVYANI_EXCEPTIONS',
+            request.journeyId,
+            logContext,
+        );
 
         const key = request['idempotencyKey'];
         const shouldCache = request['shouldCacheResponse'];

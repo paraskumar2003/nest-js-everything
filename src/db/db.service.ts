@@ -70,4 +70,8 @@ export class DbService {
     async startTransaction(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.startTransaction();
     }
+
+    async executeQuery<T>(query: string): Promise<T> {
+        return await this.dataSource.query(query);
+    }
 }

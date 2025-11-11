@@ -12,7 +12,7 @@ import { ApiResponse } from '../interfaces/api-response.interface';
 import { IdempotencyService } from '../../idempotency';
 import { CachedResponseException } from '../exceptions/cached.exception';
 import { Reflector } from '@nestjs/core';
-import { SKIP_INTERCEPTOR } from './skip-tranform.interceptor';
+import { SKIP_INTERCEPTOR } from '../decorators/skip-tranform.decorator';
 
 /**
  * Global response transformer interceptor.
@@ -48,6 +48,7 @@ export class TransformInterceptor<T>
             return value.map(v => this.sanitize(v)) as any;
         }
 
+        // Skip Date, Buffer, or any other special objects
         if (value instanceof Date || Buffer.isBuffer(value)) {
             return value;
         }

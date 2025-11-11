@@ -15,6 +15,10 @@ import {
 import { RedisModule } from './redis/redis.module';
 import { DbModule } from './db/db.module';
 import { S3Module } from './s3/s3.module';
+import { TransformInterceptor } from './common/interceptors/transform.interceptor';
+import { AllExceptionsFilter } from './common/filters/exception.filter';
+import { LoggingInterceptor } from './common/interceptors/api-logging.interceptor';
+import { S3Controller } from './s3/s3.controller';
 
 @Module({
     imports: [
@@ -69,5 +73,7 @@ import { S3Module } from './s3/s3.module';
         DbModule,
         S3Module,
     ],
+    providers: [TransformInterceptor, AllExceptionsFilter, LoggingInterceptor],
+    controllers: [S3Controller],
 })
 export class AppModule {}
