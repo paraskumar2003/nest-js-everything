@@ -3,7 +3,6 @@ import {
     IsEmail,
     IsEnum,
     IsNotEmpty,
-    IsNumber,
     IsOptional,
     IsString,
     Length,
@@ -30,10 +29,6 @@ export class CreateUserDto {
     @IsEmail()
     @IsOptional()
     email?: string;
-
-    @IsNumber()
-    @IsNotEmpty()
-    districtId: number;
 
     @IsBoolean()
     @IsOptional()

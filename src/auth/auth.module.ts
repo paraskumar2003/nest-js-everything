@@ -7,15 +7,12 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { UsersModule } from 'src/modules/users/users.module';
 import { IdempotencyModule } from 'src/idempotency';
-import { DistrictsService } from 'src/modules/districts/districts.service';
-import { DistrictsModule } from 'src/modules';
 
 @Module({
     imports: [
         UsersModule,
         PassportModule,
         IdempotencyModule,
-        DistrictsModule,
         JwtModule.registerAsync({
             imports: [ConfigModule],
             inject: [ConfigService],
@@ -26,7 +23,7 @@ import { DistrictsModule } from 'src/modules';
         }),
     ],
     controllers: [AuthController],
-    providers: [AuthService, JwtStrategy, DistrictsService],
+    providers: [AuthService, JwtStrategy],
     exports: [AuthService, JwtModule],
 })
 export class AuthModule {}
