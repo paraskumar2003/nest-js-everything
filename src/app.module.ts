@@ -13,6 +13,8 @@ import { TransformInterceptor } from './common/interceptors/transform.intercepto
 import { AllExceptionsFilter } from './common/filters/exception.filter';
 import { LoggingInterceptor } from './common/interceptors/api-logging.interceptor';
 import { S3Controller } from './s3/s3.controller';
+import { getMongoConfig } from './config/mongoose.config';
+import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
     imports: [
@@ -53,6 +55,11 @@ import { S3Controller } from './s3/s3.controller';
                     connectionLimit: 10,
                 },
             }),
+        }),
+        MongooseModule.forRootAsync({
+            imports: [ConfigModule],
+            inject: [ConfigService],
+            useFactory: getMongoConfig,
         }),
         LoggerModule,
         UsersModule,
