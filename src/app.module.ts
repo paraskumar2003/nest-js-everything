@@ -33,41 +33,52 @@ import { MongooseModule } from '@nestjs/mongoose';
                 }
             })(),
         }),
-        TypeOrmModule.forRootAsync({
-            imports: [ConfigModule],
-            inject: [ConfigService],
-            useFactory: (configService: ConfigService) => ({
-                type: 'mysql',
-                host: configService.get('DB_HOST', 'localhost'),
-                port: configService.get<number>('DB_PORT', 3306),
-                username: configService.get('DB_USERNAME', 'root'),
-                password: configService.get('DB_PASSWORD', 'password'),
-                database: configService.get('DB_NAME', 'harpic_sanitation_db'),
-                entities: [__dirname + '/**/*.entity{.ts,.js}'],
-                synchronize: false,
-                logging: configService.get('NODE_ENV') !== 'production',
-                charset: 'utf8mb4',
-                timezone: 'Z',
-                cache: {
-                    duration: 30000,
-                },
-                extra: {
-                    connectionLimit: 10,
-                },
-            }),
-        }),
+        ...(process.env.USE_MYSQL === 'true'
+            ? [
+                  TypeOrmModule.forRootAsync({
+                      imports: [ConfigModule],
+                      inject: [ConfigService],
+                      useFactory: (configService: ConfigService) => ({
+                          type: 'mysql',
+                          host: configService.get('DB_HOST', 'localhost'),
+                          port: configService.get<number>('DB_PORT', 3306),
+                          username: configService.get('DB_USERNAME', 'root'),
+                          password: configService.get(
+                              'DB_PASSWORD',
+                              'password',
+                          ),
+                          database: configService.get(
+                              'DB_NAME',
+                              'harpic_sanitation_db',
+                          ),
+                          entities: [__dirname + '/**/*.entity{.ts,.js}'],
+                          synchronize: false,
+                          logging:
+                              configService.get('NODE_ENV') !== 'production',
+                          charset: 'utf8mb4',
+                          timezone: 'Z',
+                          cache: {
+                              duration: 30000,
+                          },
+                          extra: {
+                              connectionLimit: 10,
+                          },
+                      }),
+                  }),
+                  DbModule,
+                  UsersModule,
+                  AuthModule,
+              ]
+            : []),
         MongooseModule.forRootAsync({
             imports: [ConfigModule],
             inject: [ConfigService],
             useFactory: getMongoConfig,
         }),
         LoggerModule,
-        UsersModule,
-        AuthModule,
         UtilsModule,
         IdempotencyModule,
         RedisModule,
-        DbModule,
         S3Module,
     ],
     providers: [TransformInterceptor, AllExceptionsFilter, LoggingInterceptor],
