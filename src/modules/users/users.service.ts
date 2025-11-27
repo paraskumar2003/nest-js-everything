@@ -12,9 +12,9 @@ import { ConfigService } from '@nestjs/config';
 import { User, UserRole, MongoUserDocument } from './schema/user.schema';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { VerifyEmailOtpDto } from './dto/otp/verify-email-otp.dto';
-import { Otp, OtpStatus} from "./schema/otp.schema"
+import { Otp, OtpStatus } from './schema/otp.schema';
 import axios from 'axios';
- 
+
 @Injectable()
 export class UserService {
     constructor(
@@ -24,10 +24,10 @@ export class UserService {
         private readonly otpModel: Model<Otp>,
         private readonly configService: ConfigService,
     ) {}
- 
+
     private async sendOtpEmail(email: string, otp: number): Promise<void> {
         const apiUrl = 'https://communicationapi2.almond.solutions/api/mail';
- 
+
         // ✅ Beautiful HTML email content
         const htmlContent = `
           <div style="font-family: Arial, sans-serif; background-color: #f9f9f9; padding: 40px;">
@@ -56,7 +56,7 @@ export class UserService {
             </div>
           </div>
         `;
- 
+
         try {
             await axios.post(apiUrl, {
                 mailName: 'OTP Verification',
@@ -66,22 +66,22 @@ export class UserService {
                 htmlContent,
                 attachments: [],
             });
- 
+
             console.log(`✅ OTP email sent to ${email}`);
         } catch (error: any) {
             console.error('❌ Failed to send OTP email:', error.message);
             throw new Error('Unable to send OTP email. Please try again.');
         }
     }
- 
+
     async registerUser(data: RegisterUserDto): Promise<{ otp_sent: boolean }> {
         const { name, mobile, email } = data;
- 
+
         // Check if user already exists (by mobile or email)
         let user = await this.mongoUserModel.findOne({
             $or: [{ email }, { mobile }],
         });
- 
+
         if (!user) {
             // Hash password and create new user
             const hashedPassword = await bcrypt.hash('9876543210', 10);
@@ -94,47 +94,47 @@ export class UserService {
             });
             await user.save();
         }
- 
+
         // ------------------------------
         // 2. Generate OTP
         // ------------------------------
         const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
- 
+
         // Save OTP to database if not sent already in last 5 minutes
         const lastOtp = await this.otpModel.findOne({
             email,
             active: true,
         });
- 
+
         if (lastOtp) {
             const lastSentAt = new Date(lastOtp.created_at).getTime();
             const FIVE_MIN = 5 * 60 * 1000;
- 
+
             if (Date.now() - lastSentAt < FIVE_MIN) {
                 throw new ForbiddenException(
                     'OTP already sent in last 5 minutes',
                 );
             }
         }
- 
+
         await this.otpModel.create({
             email,
             otp: otpCode,
             active: true,
         });
- 
+
         await this.sendOtpEmail(email, Number(otpCode));
- 
+
         return {
             otp_sent: true,
         };
     }
- 
+
     async verifyOtp(
         data: VerifyEmailOtpDto,
     ): Promise<{ access_token: string; otp_verified: boolean }> {
         const { email, otp } = data;
- 
+
         // ------------------------------
         // 1. Find OTP for this mobile
         // ------------------------------
@@ -143,50 +143,50 @@ export class UserService {
             active: true,
             status: 'pending',
         });
- 
+
         if (!otpRecord) {
             throw new ForbiddenException('OTP not found or expired');
         }
- 
+
         // ------------------------------
         // 2. Validate OTP
         // ------------------------------
         if (otpRecord.otp !== otp) {
             throw new BadRequestException('Invalid OTP');
         }
- 
+
         // OPTIONAL: if OTP should expire in 5 minutes
         const createdAt = new Date(otpRecord.created_at).getTime();
         const FIVE_MIN = 5 * 60 * 1000;
- 
+
         if (Date.now() - createdAt > FIVE_MIN) {
             otpRecord.status = OtpStatus.EXPIRED;
             otpRecord.active = false;
             await otpRecord.save();
             throw new ForbiddenException('OTP expired');
         }
- 
+
         // ------------------------------
         // 3. Mark OTP as verified
         // ------------------------------
         otpRecord.status = OtpStatus.VERIFIED;
         otpRecord.active = false;
         await otpRecord.save();
- 
+
         // ------------------------------
         // 4. Get or Create User
         // ------------------------------
         let user = await this.mongoUserModel.findOne({ email });
- 
+
         if (!user) {
             throw new InternalServerErrorException('User not found');
         }
- 
+
         // ------------------------------
         // 5. Generate JWT Token
         // ------------------------------
         const secret = this.configService.get('JWT_SECRET', 'default_secret');
- 
+
         const token = jwt.sign(
             {
                 id: user._id,
@@ -197,12 +197,10 @@ export class UserService {
             secret,
             { expiresIn: '1h' },
         );
- 
+
         return {
             access_token: token,
             otp_verified: true,
         };
     }
 }
- 
- 
