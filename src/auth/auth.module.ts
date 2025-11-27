@@ -1,16 +1,13 @@
 import { Module } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { AuthController } from './auth.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './strategies/jwt.strategy';
-import { UsersModule } from 'src/modules/users/users.module';
 import { IdempotencyModule } from 'src/idempotency';
 
 @Module({
     imports: [
-        UsersModule,
+        
         PassportModule,
         IdempotencyModule,
         JwtModule.registerAsync({
@@ -22,8 +19,8 @@ import { IdempotencyModule } from 'src/idempotency';
             }),
         }),
     ],
-    controllers: [AuthController],
-    providers: [AuthService, JwtStrategy],
-    exports: [AuthService, JwtModule],
+    controllers: [],
+    providers: [ JwtStrategy],
+    exports: [ JwtModule],
 })
 export class AuthModule {}

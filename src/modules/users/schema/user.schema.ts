@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 import { BaseSchema } from 'src/common/base.schema';
 
-export type MongoUserDocument = MongoUser & Document;
+export type MongoUserDocument = User & Document;
 
 // Enum for roles
 export enum UserRole {
@@ -14,7 +14,7 @@ export enum UserRole {
     timestamps: { createdAt: 'registered_at', updatedAt: true },
     collection: 'users',
 })
-export class MongoUser extends BaseSchema {
+export class User extends BaseSchema {
     _id: Types.ObjectId;
 
     @Prop({ required: true })
@@ -40,4 +40,4 @@ export class MongoUser extends BaseSchema {
     roles: UserRole[];
 }
 
-export const MongoUserSchema = SchemaFactory.createForClass(MongoUser);
+export const MongoUserSchema = SchemaFactory.createForClass(User);

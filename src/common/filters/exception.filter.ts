@@ -91,13 +91,6 @@ export class AllExceptionsFilter implements ExceptionFilter {
         logContext.response = responseObj;
         logContext.statusCode = statusCode;
 
-        // Log everything
-        this.loggerService.error(
-            'DEVYANI_EXCEPTIONS',
-            request.journeyId,
-            logContext,
-        );
-
         const key = request['idempotencyKey'];
         const shouldCache = request['shouldCacheResponse'];
 

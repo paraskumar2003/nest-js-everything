@@ -15,6 +15,7 @@ import { LoggingInterceptor } from './common/interceptors/api-logging.intercepto
 import { S3Controller } from './s3/s3.controller';
 import { getMongoConfig } from './config/mongoose.config';
 import { MongooseModule } from '@nestjs/mongoose';
+import { RewardsModule } from './modules/rewards/rewards.module';
 
 @Module({
     imports: [
@@ -66,10 +67,12 @@ import { MongooseModule } from '@nestjs/mongoose';
                       }),
                   }),
                   DbModule,
-                  UsersModule,
+                  
                   AuthModule,
+                  
               ]
             : []),
+            UsersModule,
         MongooseModule.forRootAsync({
             imports: [ConfigModule],
             inject: [ConfigService],
@@ -80,6 +83,7 @@ import { MongooseModule } from '@nestjs/mongoose';
         IdempotencyModule,
         RedisModule,
         S3Module,
+        RewardsModule
     ],
     providers: [TransformInterceptor, AllExceptionsFilter, LoggingInterceptor],
     controllers: [S3Controller],

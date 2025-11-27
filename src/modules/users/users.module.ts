@@ -1,23 +1,25 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UsersService } from './users.service';
-import { UsersController } from './users.controller';
-import { User } from './entities/user.entity';
+import { UserService } from './users.service';
+import { UserController } from './users.controller';
 import { Otp } from './entities/otp.entity';
 import { IdempotencyModule } from 'src/idempotency/key-guard/idempotency.module';
 import { MongooseModule } from '@nestjs/mongoose';
-import { MongoUser, MongoUserSchema } from './schema/user.schema';
+import { User, MongoUserSchema } from './schema/user.schema';
+
+const mysqlImports =
+  process.env.USE_MYSQL === 'true'
+    ? [TypeOrmModule.forFeature([User, Otp])]
+    : [];
 
 @Module({
-    imports: [
-        TypeOrmModule.forFeature([User, Otp]),
-        MongooseModule.forFeature([
-            { name: MongoUser.name, schema: MongoUserSchema },
-        ]),
-        IdempotencyModule,
-    ],
-    controllers: [UsersController],
-    providers: [UsersService],
-    exports: [UsersService],
+  imports: [
+    ...mysqlImports,
+    MongooseModule.forFeature([{ name: User.name, schema: MongoUserSchema }]),
+    IdempotencyModule,
+  ],
+  controllers: [UserController],
+  providers: [UserService],
+  exports: [UserService],
 })
 export class UsersModule {}
