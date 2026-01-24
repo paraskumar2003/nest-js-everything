@@ -1,10 +1,11 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
-import { TransformInterceptor } from './common/interceptors/transform.interceptor';
-import { LoggingInterceptor } from './common/interceptors/api-logging.interceptor';
+// import { TransformInterceptor } from './common/interceptors/transform.interceptor';
+// import { LoggingInterceptor } from './common/interceptors/api-logging.interceptor';
 import { AllExceptionsFilter } from './common/filters/exception.filter';
 import { AppClusterService } from './app-cluster.service';
+import { MetricsInterceptor } from './metrics/interceptors/metrics.interceptor';
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
@@ -12,10 +13,14 @@ async function bootstrap() {
     // Set global prefix
     app.setGlobalPrefix('api');
 
+    // For per-API metrics in prometheus
+    app.useGlobalInterceptors(new MetricsInterceptor());
+
+
     // Apply global response transformation interceptor
-    const transformInterceptor = app.get(TransformInterceptor);
-    const loggingInterceptor = app.get(LoggingInterceptor);
-    app.useGlobalInterceptors(transformInterceptor, loggingInterceptor);
+    // const transformInterceptor = app.get(TransformInterceptor);
+    // const loggingInterceptor = app.get(LoggingInterceptor);
+    // app.useGlobalInterceptors(transformInterceptor, loggingInterceptor);
 
     // Apply global exception filter
     const exceptionFilter = app.get(AllExceptionsFilter);

@@ -16,6 +16,8 @@ import { S3Controller } from './s3/s3.controller';
 import { getMongoConfig } from './config/mongoose.config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { RewardsModule } from './modules/rewards/rewards.module';
+import { PrometheusModule } from '@willsoto/nestjs-prometheus';
+import { MetricsModule } from './metrics/metrics.module';
 
 @Module({
     imports: [
@@ -33,6 +35,12 @@ import { RewardsModule } from './modules/rewards/rewards.module';
                         return '.env';
                 }
             })(),
+        }),
+        PrometheusModule.register({
+            path: '/metrics',
+            defaultLabels: {
+                service: 'nest-service', // 👈 UNIQUE NAME
+            },
         }),
         ...(process.env.USE_MYSQL === 'true'
             ? [
@@ -83,7 +91,8 @@ import { RewardsModule } from './modules/rewards/rewards.module';
         IdempotencyModule,
         RedisModule,
         S3Module,
-        RewardsModule
+        RewardsModule,
+        MetricsModule
     ],
     providers: [TransformInterceptor, AllExceptionsFilter, LoggingInterceptor],
     controllers: [S3Controller],
